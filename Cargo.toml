@@ -1,0 +1,7 @@
+[package]
+name = "rust_fractal_tree"
+version = "0.1.0"
+authors = ["Benjamin Wallberg <me@bwallberg.com>"]
+
+[dependencies]
+piston_window = "0.65.0"
