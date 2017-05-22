@@ -1,3 +1,9 @@
 target/
 **/*.rs.bk
 Cargo.lock
+
+/RustFractalTree.sublime-project
+
+/.gitignore
+
+/RustFractalTree.sublime-workspace
