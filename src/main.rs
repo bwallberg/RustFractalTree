@@ -15,6 +15,7 @@ struct Branch {
 fn main() {
     let width: u32 = 1280;
     let height: u32 = 720;
+    let angle_mod: f64 = 30.0;
     let mut depth: f64 = 9.0;
 
     let mut window: PistonWindow = WindowSettings::new("RustFractalTree", [width,  height]).exit_on_esc(true).build().unwrap();
@@ -64,7 +65,7 @@ fn main() {
                         new_branches.push(Branch {
                             start_x: branch.start_x + (branch.length * branch.angle.to_radians().cos()),
                             start_y: branch.start_y + (branch.length * branch.angle.to_radians().sin()),
-                            angle: branch.angle - 20.0,
+                            angle: branch.angle - angle_mod,
                             length: branch.length - 7.5,
                             cur_length: 0.0,
                             split: false
@@ -73,7 +74,7 @@ fn main() {
                         new_branches.push(Branch {
                             start_x: branch.start_x + (branch.length * branch.angle.to_radians().cos()),
                             start_y: branch.start_y + (branch.length * branch.angle.to_radians().sin()),
-                            angle: branch.angle + 20.0,
+                            angle: branch.angle + angle_mod,
                             length: branch.length - 7.5,
                             cur_length: 0.0,
                             split: false
