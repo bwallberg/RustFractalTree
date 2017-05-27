@@ -1,6 +1,10 @@
+// TODO impl Branch to avoid unnecessary code duplication
+// TODO refactor 'depth' to actually be depth, currently it's just number of splits
 extern crate piston_window;
+extern crate rand;
 
 use piston_window::*;
+use rand::Rng; 
 
 #[derive(Debug)]
 struct Branch {
@@ -15,8 +19,8 @@ struct Branch {
 fn main() {
     let width: u32 = 1280;
     let height: u32 = 720;
-    let angle_mod: f64 = 30.0;
-    let mut depth: f64 = 9.0;
+    let angle_mod: f64 = 20.0;
+    let mut depth: f64 = 100.0;
 
     let mut window: PistonWindow = WindowSettings::new("RustFractalTree", [width,  height]).exit_on_esc(true).build().unwrap();
 
@@ -38,7 +42,7 @@ fn main() {
                 
                 for branch in &branches {
                     Line::new(
-                        [1.0, 0.0, 0.0, 1.0], // color
+                        [255.0, 255.0, 255.0, 1.0], // color
                         1.0 // radius
                     ).draw(
                         [
@@ -62,23 +66,33 @@ fn main() {
                         branch.split = true;
                         did_split = true;
 
-                        new_branches.push(Branch {
-                            start_x: branch.start_x + (branch.length * branch.angle.to_radians().cos()),
-                            start_y: branch.start_y + (branch.length * branch.angle.to_radians().sin()),
-                            angle: branch.angle - angle_mod,
-                            length: branch.length - 7.5,
-                            cur_length: 0.0,
-                            split: false
-                        });
+                        let branch_one_length: f64 = branch.length - (rand::thread_rng().gen_range(5, 20) as f64);
+                        let branch_two_length: f64 = branch.length - (rand::thread_rng().gen_range(5, 20) as f64);
 
-                        new_branches.push(Branch {
-                            start_x: branch.start_x + (branch.length * branch.angle.to_radians().cos()),
-                            start_y: branch.start_y + (branch.length * branch.angle.to_radians().sin()),
-                            angle: branch.angle + angle_mod,
-                            length: branch.length - 7.5,
-                            cur_length: 0.0,
-                            split: false
-                        });
+                        let branch_one_angle: f64 = branch.angle - (angle_mod + (rand::thread_rng().gen_range(0, 10) as f64));
+                        let branch_two_angle: f64 = branch.angle + (angle_mod + (rand::thread_rng().gen_range(0, 10) as f64));
+
+                        if branch_one_length > 0.0 {
+                            new_branches.push(Branch {
+                                start_x: branch.start_x + (branch.length * branch.angle.to_radians().cos()),
+                                start_y: branch.start_y + (branch.length * branch.angle.to_radians().sin()),
+                                angle: branch_one_angle,
+                                length: branch_one_length,
+                                cur_length: 0.0,
+                                split: false
+                            });
+                        }
+
+                        if branch_two_length > 0.0 {
+                            new_branches.push(Branch {
+                                start_x: branch.start_x + (branch.length * branch.angle.to_radians().cos()),
+                                start_y: branch.start_y + (branch.length * branch.angle.to_radians().sin()),
+                                angle: branch_two_angle,
+                                length: branch_two_length,
+                                cur_length: 0.0,
+                                split: false
+                            });
+                        }
                     } else if branch.cur_length < branch.length {
                         branch.cur_length += 100.0 * update_args.dt;
                     }

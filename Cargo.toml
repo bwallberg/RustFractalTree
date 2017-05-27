@@ -5,3 +5,4 @@ authors = ["Benjamin Wallberg <me@bwallberg.com>"]
 
 [dependencies]
 piston_window = "0.65.0"
+rand = "0.3.15"
