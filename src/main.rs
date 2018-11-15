@@ -53,6 +53,8 @@ fn main() {
     let mut branches: Vec<Branch> = Vec::new();
     let mut zero_reached = false;
 
+    let mut alpha = 1.0;
+
     branches.push(Branch::new(
         WIDTH as f64 / 2.0,
         HEIGHT as f64,
@@ -61,13 +63,31 @@ fn main() {
     ));
 
     while let Some(e) = window.next() {
-        if let Some(r) = e.render_args() {
+        
+        if let Some(Button::Keyboard(key)) = e.press_args() {
+            match key {
+                Key::Space => {
+                    branches.clear();
+                    zero_reached = false;
+                    branches.push(Branch::new(
+                        WIDTH as f64 / 2.0,
+                        HEIGHT as f64,
+                        -90.0,
+                        100.0
+                    ));
+                },
+                _ => println!("Pressed keyboard key {:?}", key)
+            }
+        }
+
+        if let Some(_r) = e.render_args() {
             window.draw_2d(&e, |c, g| {
-                clear([0.0, 0.0, 0.0, 1.0], g);
-                
+                if (branches.len() == 1) {
+                    clear([0.0, 0.0, 0.0, 1.0], g);
+                }
                 for branch in &branches {
                     Line::new(
-                        [255.0, 255.0, 255.0, 1.0], // color
+                        [255.0, 255.0, 255.0, alpha], // color
                         1.0 // radius
                     ).draw(
                         [
@@ -118,6 +138,9 @@ fn main() {
                 }
                 zero_reached = nothing_updated;
                 if new_branches.len() > 0 {
+                    if(alpha > 0.1) {
+                        alpha -= 0.01;
+                    }
                     branches.append(&mut new_branches);
                 }
             }
